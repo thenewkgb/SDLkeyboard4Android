@@ -109,10 +109,9 @@ int main(int argc, char *argv[])
     SDL_Event e{};
     SDL_TouchFingerEvent f{};
     SDL_TextInputEvent t{};
-   // SDL_TextEditingEvent tee{};
 
     SDL_Rect touch{};
-    touch.x = 301;
+    touch.x = 0;
     touch.y = 0;
     touch.w = 1;
     touch.h = 1;
@@ -129,18 +128,17 @@ int main(int argc, char *argv[])
     quit.y = 300;
     quit.h = 300;
     quit.w = sw;
-    /*
+
     // show device is capable
-    
+
     SDL_ShowSimpleMessageBox(
         SDL_MESSAGEBOX_ERROR,
         "title", temp.c_str(), NULL);
-*/
-    
+
     SDL_SetTextInputRect(&input);
     //SDL_SCANCODE_RETURN
     //SDLK_RETURN '\r'
-    
+
     /*
     std::string on = "1";
    SDL_SetHint(
@@ -148,10 +146,7 @@ int main(int argc, char *argv[])
        on.c_str());
    */
 
-    char myText[10];
-    char finalAns[10];
-    //char *comp{};
-    //int len{0};
+    char myText[10]{0};
 
     SDL_bool loop{SDL_TRUE};
 
@@ -182,32 +177,20 @@ int main(int argc, char *argv[])
             }
             case SDL_TEXTINPUT:
             {
+                // read input once
                 t = e.text;
-                strcat(myText, t.text);
-                // to only pick up one char
                 //myText = t.text;
-
-                /*
-                Return Key wont work
-                
-                const Uint8 *state =
-                    SDL_GetKeyboardState(nullptr);
-                    
-                //try all
-                if (state[SDL_SCANCODE_RETURN])
+                // concatenate!
+                strcat(myText, t.text);
+                //stoi will cut leading zeros
+                break;
+            }
+            default:
+            {
+                if (e.key.keysym.sym == SDL_GetKeyFromScancode(SDL_SCANCODE_RETURN))
                 {
-                    quit.x = 50;
+                    loop = SDL_FALSE;
                 }
-                if (state[SDL_GetKeyFromScancode(
-                        SDL_SCANCODE_RETURN)])
-                {
-                    quit.x = 50;
-                }
-                if (state[SDLK_RETURN])
-                {
-                    quit.x = 50;
-                }
-                */
                 break;
             }
             }
@@ -230,8 +213,9 @@ int main(int argc, char *argv[])
 
     //std::string dude = "dude";
     //strcat(myText, dude.c_str());
-    
+
     // some to_int practice
+    /*
     std::string s{"12"};
     int num = 30;
     
@@ -239,16 +223,16 @@ int main(int argc, char *argv[])
     num += 100;
     s = std::to_string(num);
     strcpy(finalAns, s.c_str());
-    // odd bodge
-    //strcat(myText, s.c_str());
-    
+    */
 
     SDL_SetHint(
         SDL_HINT_RENDER_SCALE_QUALITY, "2");
 
-    //SDL_Texture *textTexture = loadText(renderer, myText);
+    SDL_Texture *textTexture = loadText(renderer, myText);
+    /*
     SDL_Texture *textTexture =
         loadText(renderer, finalAns);
+    */
 
     if (textTexture == NULL)
     {
@@ -261,6 +245,7 @@ int main(int argc, char *argv[])
 
         return 1;
     }
+
     int tw, th;
     SDL_QueryTexture(textTexture, NULL, NULL, &tw, &th);
     int w, h;
