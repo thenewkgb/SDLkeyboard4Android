@@ -1,2 +1,2 @@
 # SDLkeyboard4Android
-Back up of work
+How to pull up an alphanumeric keyboard using SDL.
